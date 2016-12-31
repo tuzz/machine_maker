@@ -28,4 +28,19 @@ RSpec.describe DimacsWriter do
       DimacsWriter.write(input, output)
     }.to raise_error(/double negation: --a/)
   end
+
+  it "can remember which variables map to literals" do
+    input.puts "a b c"
+    input.puts "a -d b"
+
+    DimacsWriter.write(input, output, remember: %w(b d))
+
+    expect(dimacs).to eq [
+      "p cnf 4 2",
+      "1 2 3 0",
+      "1 -4 2 0",
+      "c 2 b",
+      "c 4 d",
+    ]
+  end
 end

@@ -1,8 +1,9 @@
 module DimacsWriter
   class << self
-    def write(input, output)
+    def write(input, output, remember: [])
       first_pass(input, output)
       second_pass(input, output)
+      write_metadata(remember, output)
     end
 
     def first_pass(input, output)
@@ -46,6 +47,13 @@ module DimacsWriter
         end
 
         output.puts "0"
+      end
+    end
+
+    def write_metadata(variables, output)
+      variables.each do |variable|
+        literal = @mappings[variable]
+        output.puts "c #{literal} #{variable}"
       end
     end
   end
