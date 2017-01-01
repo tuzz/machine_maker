@@ -8,7 +8,7 @@ module SatSolver
         input.close_write
 
         out.read.each_line { |l| certificate.puts(l) }
-        err.read.each_line { |l| stderr.puts(l) }
+        err.read.each_line { |l| stderr.puts(l) } if stderr
       end
     end
   end
