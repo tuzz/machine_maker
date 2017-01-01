@@ -43,4 +43,21 @@ RSpec.describe DimacsWriter do
       "c 4 d",
     ]
   end
+
+  it "can remember everything" do
+    input.puts "a b c"
+    input.puts "a -d b"
+
+    DimacsWriter.write(input, output, remember: true)
+
+    expect(dimacs).to eq [
+      "p cnf 4 2",
+      "1 2 3 0",
+      "1 -4 2 0",
+      "c 1 a",
+      "c 2 b",
+      "c 3 c",
+      "c 4 d",
+    ]
+  end
 end

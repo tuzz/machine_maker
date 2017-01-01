@@ -51,6 +51,8 @@ module DimacsWriter
     end
 
     def write_metadata(variables, output)
+      variables = @mappings.keys if variables == true
+
       variables.each do |variable|
         literal = @mappings[variable]
         output.puts "c #{literal} #{variable}"
