@@ -17,6 +17,7 @@ class DescriptionReducer
     each_transition_goes_to_one_state
     each_transition_reads_one_symbol
     each_transition_writes_one_symbol
+    each_transition_moves_left_or_right
 
     machine_is_deterministic
   end
@@ -47,6 +48,13 @@ class DescriptionReducer
       variables = symbol_vars("Write", transition)
       CommanderVariable.exactly_one(variables, io)
     end
+  end
+
+  # We can represent this with a single variable, so we don't need to do
+  # anything. When used outside this reducer, we'll use: Direction_#{transition}
+  # and the convention that true=left, false=right.
+  def each_transition_moves_left_or_right
+    # noop
   end
 
   def machine_is_deterministic
