@@ -143,8 +143,8 @@ RSpec.describe DescriptionReducer do
       expect(symbols).to be_one
     end
 
-    it "is deterministic, i.e. it has one transition per pair" do
-      pairs = transitions.times.map do |transition|
+    let(:pairs) do
+      transitions.times.map do |transition|
         from_states = result.values_at(
           "From_#{transition}_0",
           "From_#{transition}_1",
@@ -164,26 +164,40 @@ RSpec.describe DescriptionReducer do
           read_symbols.index(true),
         ]
       end
+    end
 
-      expect(pairs.sort).to eq [
+    it "is deterministic, i.e. it has one transition per pair" do
+      expect(pairs).to include(
         [0, 0], [0, 1], [0, 2],
         [1, 0], [1, 1], [1, 2],
         [2, 0], [2, 1], [2, 2],
         [3, 0], [3, 1], [3, 2],
-      ]
+      )
     end
 
-    it "does not break symmetries by default" do
-      expect(SymmetryBreaker).not_to receive(:canonically_order)
-      result
+    context "when break_symmetries is false" do
+      let(:break_symmetries) { false }
+
+      it "pairs do not have a canonical ordering" do
+        expect(pairs).not_to eq [
+          [0, 0], [0, 1], [0, 2],
+          [1, 0], [1, 1], [1, 2],
+          [2, 0], [2, 1], [2, 2],
+          [3, 0], [3, 1], [3, 2],
+        ]
+      end
     end
 
     context "when break_symmetries is true" do
       let(:break_symmetries) { true }
 
-      it "breaks symmetries" do
-        expect(SymmetryBreaker).to receive(:canonically_order)
-        result
+      it "pairs have a canonical ordering" do
+        expect(pairs).to eq [
+          [0, 0], [0, 1], [0, 2],
+          [1, 0], [1, 1], [1, 2],
+          [2, 0], [2, 1], [2, 2],
+          [3, 0], [3, 1], [3, 2],
+        ]
       end
     end
   end
