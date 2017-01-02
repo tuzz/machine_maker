@@ -2,12 +2,14 @@ RSpec.describe DescriptionReducer do
   let(:io) { StringIO.new }
   let(:dimacs) { io.string.split("\n") }
   let(:transitions) { 2 }
+  let(:break_symmetries) { false }
 
   subject do
     described_class.new(
       transitions: transitions,
       symbols: 3,
       states: 4,
+      break_symmetries: break_symmetries,
       io: io,
     )
   end
@@ -169,6 +171,20 @@ RSpec.describe DescriptionReducer do
         [2, 0], [2, 1], [2, 2],
         [3, 0], [3, 1], [3, 2],
       ]
+    end
+
+    it "does not break symmetries by default" do
+      expect(SymmetryBreaker).not_to receive(:canonically_order)
+      result
+    end
+
+    context "when break_symmetries is true" do
+      let(:break_symmetries) { true }
+
+      it "breaks symmetries" do
+        expect(SymmetryBreaker).to receive(:canonically_order)
+        result
+      end
     end
   end
 end

@@ -3,12 +3,13 @@ class DescriptionReducer
     new(**params).reduce
   end
 
-  attr_accessor :transitions, :symbols, :states, :io
+  attr_accessor :transitions, :symbols, :states, :break_symmetries, :io
 
-  def initialize(transitions:, symbols:, states:, io:)
+  def initialize(transitions:, symbols:, states:, break_symmetries:, io:)
     self.transitions = transitions
     self.symbols = symbols
     self.states = states
+    self.break_symmetries = break_symmetries
     self.io = io
   end
 
@@ -60,13 +61,19 @@ class DescriptionReducer
   def machine_is_deterministic
     # Create a variable for each possible from state / read symbol pair.
     # From_st ^ Read_sy -> TransitionPair_st_sy
-    variables = transitions.times do |transition|
-      state_vars("From", transition).each.with_index do |from_state, i|
-        symbol_vars("Read", transition).each.with_index do |read_symbol, j|
+    variables = transitions.times.map do |transition|
+      state_vars("From", transition).flat_map.with_index do |from_state, i|
+        symbol_vars("Read", transition).map.with_index do |read_symbol, j|
           variable = "TransitionPair_#{transition}_#{i}_#{j}"
           io.puts "-#{from_state} -#{read_symbol} #{variable}"
+          variable
         end
       end
+    end
+
+    if break_symmetries
+      # Impose a canonical ordering on transitions to break symmetries.
+      SymmetryBreaker.canonically_order(variables, io)
     end
 
     # There must be one of each pairing across all transitions.
