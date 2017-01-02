@@ -18,7 +18,7 @@ class ConfigurationReducer
     head_is_in_one_place
     each_tape_cell_contains_one_symbol
     in_one_state
-    reads_one_symbol
+    denormalise_read_symbol
   end
 
   def head_is_in_one_place
@@ -36,7 +36,7 @@ class ConfigurationReducer
     CommanderVariable.exactly_one(state_vars, io)
   end
 
-  def reads_one_symbol
+  def denormalise_read_symbol
     CommanderVariable.exactly_one(symbol_vars, io)
 
     # Head_p ^ Tape_p_s -> Symbol_s

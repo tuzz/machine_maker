@@ -43,9 +43,9 @@ RSpec.describe ConfigurationReducer do
     end
   end
 
-  describe "#reads_one_symbol" do
+  describe "#denormalise_read_symbol" do
     it "uses commander variable" do
-      subject.reads_one_symbol
+      subject.denormalise_read_symbol
 
       expect(dimacs).to include(
         "-Symbol_1_2_0 -Symbol_1_2_1",
@@ -53,7 +53,7 @@ RSpec.describe ConfigurationReducer do
     end
 
     it "is a consequence of the head and tape symbols" do
-      subject.reads_one_symbol
+      subject.denormalise_read_symbol
 
       # If the head is at position 0 and the tape contents of the 0 cell are 1
       # then the read symbol must be a 1.
