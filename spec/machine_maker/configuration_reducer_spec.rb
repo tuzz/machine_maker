@@ -52,7 +52,7 @@ RSpec.describe ConfigurationReducer do
       )
     end
 
-    it "is a consequence of the head and tape symbols" do
+    it "is implied by the head's position and tape contents at that position" do
       subject.denormalise_read_symbol
 
       # If the head is at position 0 and the tape contents of the 0 cell are 1
