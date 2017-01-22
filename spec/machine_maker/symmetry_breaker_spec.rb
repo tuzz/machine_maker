@@ -27,14 +27,14 @@ RSpec.describe SymmetryBreaker do
 
     certificate = StringIO.new
 
-    # Lingeling does symmetry breaking, so use a different solver:
-    SatSolver.solve(dimacs, certificate, command: "riss")
-
     time_taken = Benchmark.realtime do
-      result = CertificateDecoder.decode(certificate, dimacs)
-      expect(result).to be_nil
+      # Lingeling does symmetry breaking, so use a different solver:
+      SatSolver.solve(dimacs, certificate, command: "riss")
     end
 
+    result = CertificateDecoder.decode(certificate, dimacs)
+
+    expect(result).to be_nil
     expect(time_taken).to be < 0.5
   end
 end
