@@ -55,7 +55,7 @@ RSpec.describe DescriptionReducer do
   end
 
   describe "#machine_is_deterministic" do
-    it "has a variable for ever from state/read symbol pair" do
+    it "has a variable for every from state/read symbol pair" do
       subject.machine_is_deterministic
 
       expect(dimacs).to include(
@@ -67,14 +67,20 @@ RSpec.describe DescriptionReducer do
       )
     end
 
-    it "uses commander-variable across pairs with the same transition" do
+    it "ensures that exactly one transition pair is true per transition" do
       subject.machine_is_deterministic
 
       expect(dimacs).to include(
-        "TransitionPair_0_0_0 TransitionPair_1_0_0",
-        "-TransitionPair_0_0_0 -TransitionPair_1_0_0",
+        "-TransitionPair_0_0_0 -TransitionPair_0_0_1",
+        "-TransitionPair_0_0_0 -TransitionPair_0_0_2",
+      )
+    end
 
-        "TransitionPair_0_1_1 TransitionPair_1_1_1",
+    it "ensures that pairs are unique across all transitions" do
+      subject.machine_is_deterministic
+
+      expect(dimacs).to include(
+        "-TransitionPair_0_0_0 -TransitionPair_1_0_0",
         "-TransitionPair_0_1_1 -TransitionPair_1_1_1",
       )
 
@@ -82,6 +88,15 @@ RSpec.describe DescriptionReducer do
         "TransitionPair_0_0_0 TransitionPair_0_0_0",
         "TransitionPair_1_0_0 TransitionPair_1_0_0",
         "TransitionPair_0_0_1 TransitionPair_1_1_0",
+      )
+    end
+
+    it "does not enforce that all combinations of from/read have pairs" do
+      subject.machine_is_deterministic
+
+      expect(dimacs).not_to include(
+        "TransitionPair_0_0_0 TransitionPair_1_0_0",
+        "TransitionPair_0_1_1 TransitionPair_1_1_1",
       )
     end
   end
@@ -175,6 +190,14 @@ RSpec.describe DescriptionReducer do
       )
     end
 
+    context "when there are fewer transitions than (states * symbols)" do
+      let(:transitions) { 5 }
+
+      it "sets that many transition pairs to true" do
+        expect(pairs.size).to eq(5)
+      end
+    end
+
     context "when break_symmetries is false" do
       let(:break_symmetries) { false }
 
@@ -198,6 +221,15 @@ RSpec.describe DescriptionReducer do
           [2, 0], [2, 1], [2, 2],
           [3, 0], [3, 1], [3, 2],
         ]
+      end
+
+      context "when there are fewer transitions than (states * symbols)" do
+        let(:transitions) { 5 }
+
+        it "orders the reduced set of transition pairs canonically" do
+          expect(pairs.size).to eq(5)
+          expect(pairs).to eq(pairs.sort)
+        end
       end
     end
   end

@@ -71,18 +71,26 @@ class DescriptionReducer
       end
     end
 
+    # There must be exactly one TransitionPair per transition.
+    variables.each do |pairs_per_transition|
+      CommanderVariable.exactly_one(pairs_per_transition, io)
+    end
+
     if break_symmetries
       # Impose a canonical ordering on transitions to break symmetries.
       SymmetryBreaker.canonically_order(variables, io)
     end
 
-    # There must be one of each pairing across all transitions.
-    states.times do |state|
-      symbols.times do |symbol|
+    # The pairings must be unique across transitions, i.e. the machine can't
+    # have two transitions with the same from state / read symbol. We use
+    # 'at_most_one' here because we might not have a transition pair for every
+    # from state / read symbol.
+    states.times do |from|
+      symbols.times do |read|
         variables = transitions.times.map do |transition|
-          "TransitionPair_#{transition}_#{state}_#{symbol}"
+          "TransitionPair_#{transition}_#{from}_#{read}"
         end
-        CommanderVariable.exactly_one(variables, io)
+        CommanderVariable.at_most_one(variables, io)
       end
     end
   end
