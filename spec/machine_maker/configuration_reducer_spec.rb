@@ -93,6 +93,22 @@ RSpec.describe ConfigurationReducer do
       )
     end
 
+    let(:left_symbols) do
+      result.values_at(
+        "LeftSymbol_1_2_0",
+        "LeftSymbol_1_2_1",
+        "LeftSymbol_1_2_2",
+      )
+    end
+
+    let(:right_symbols) do
+      result.values_at(
+        "RightSymbol_1_2_0",
+        "RightSymbol_1_2_1",
+        "RightSymbol_1_2_2",
+      )
+    end
+
     it "has exactly one head position" do
       expect(head_positions).to be_one
     end
@@ -132,6 +148,58 @@ RSpec.describe ConfigurationReducer do
       )
 
       expect(read_symbols).to eq(tape_symbols)
+    end
+
+    context "when the head isn't at the edge of the tape" do
+      before do
+        io.puts "Head_1_2_2"
+      end
+
+      it "has a left symbol that matches the symbol left of the head" do
+        position = head_positions.index(true)
+        expect(position).to eq(2)
+
+        tape_symbols = result.values_at(
+          "Tape_1_2_1_0",
+          "Tape_1_2_1_1",
+          "Tape_1_2_1_2",
+        )
+
+        expect(left_symbols).to eq(tape_symbols)
+      end
+
+      it "has a right symbol that matches the symbol right of the head" do
+        position = head_positions.index(true)
+        expect(position).to eq(2)
+
+        tape_symbols = result.values_at(
+          "Tape_1_2_3_0",
+          "Tape_1_2_3_1",
+          "Tape_1_2_3_2",
+        )
+
+        expect(right_symbols).to eq(tape_symbols)
+      end
+    end
+
+    context "when the head is at the left edge of the tape" do
+      before do
+        io.puts "Head_1_2_0"
+      end
+
+      it "ensures there is no left symbol" do
+        expect(left_symbols).to eq [false, false, false]
+      end
+    end
+
+    context "when the head is at the right edge of the tape" do
+      before do
+        io.puts "Head_1_2_4"
+      end
+
+      it "ensures there is no right symbol" do
+        expect(right_symbols).to eq [false, false, false]
+      end
     end
   end
 end

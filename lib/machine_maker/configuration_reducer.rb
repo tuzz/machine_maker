@@ -18,7 +18,10 @@ class ConfigurationReducer
     head_is_in_one_place
     each_tape_cell_contains_one_symbol
     in_one_state
+
     denormalise_read_symbol
+    denormalise_left_symbol
+    denormalise_right_symbol
   end
 
   def head_is_in_one_place
@@ -47,6 +50,37 @@ class ConfigurationReducer
     end
   end
 
+  def denormalise_left_symbol
+    at_left_edge = "Head_#{computation}_#{step}_0"
+    CommanderVariable.exactly_one([*left_symbol_vars, at_left_edge], io)
+
+    # Head_p ^ Tape_p-1 -> LeftSymbol_s
+    left_symbol_vars.each.with_index do |symbol, i|
+      tape_symbols = tape_symbol_vars(i).unshift(nil) # offset by -1
+
+      position_vars.zip(tape_symbols) do |position, tape_symbol|
+        next if tape_symbol.nil?
+        io.puts "-#{position} -#{tape_symbol} #{symbol}"
+      end
+    end
+  end
+
+  def denormalise_right_symbol
+    at_right_edge = "Head_#{computation}_#{step}_4"
+    CommanderVariable.exactly_one([*right_symbol_vars, at_right_edge], io)
+
+    # Head_p ^ Tape_p+1 -> RightSymbol_s
+    right_symbol_vars.each.with_index do |symbol, i|
+      tape_symbols = tape_symbol_vars(i)
+      tape_symbols.shift # offset by +1
+
+      position_vars.zip(tape_symbols) do |position, tape_symbol|
+        next if tape_symbol.nil?
+        io.puts "-#{position} -#{tape_symbol} #{symbol}"
+      end
+    end
+  end
+
   def position_vars
     @position_vars ||= cells.times.map do |cell|
       "Head_#{computation}_#{step}_#{cell}"
@@ -56,6 +90,18 @@ class ConfigurationReducer
   def symbol_vars
     symbols.times.map do |symbol|
       "Symbol_#{computation}_#{step}_#{symbol}"
+    end
+  end
+
+  def left_symbol_vars
+    symbols.times.map do |symbol|
+      "LeftSymbol_#{computation}_#{step}_#{symbol}"
+    end
+  end
+
+  def right_symbol_vars
+    symbols.times.map do |symbol|
+      "RightSymbol_#{computation}_#{step}_#{symbol}"
     end
   end
 
