@@ -3,13 +3,17 @@
 
 module CommanderVariable
   class << self
-    def exactly_one(list, io, commander = nil)
-      return wrapper(list, io) unless commander
+    def exactly_one(list, io)
+      at_most_one(list, io, at_least_one: true)
+    end
+
+    def at_most_one(list, io, commander: nil, at_least_one: at_least_one)
+      return wrapper(list, io, at_least_one: at_least_one) unless commander
 
       clause_vars = list.map do |item|
         if item.is_a?(Array)
           subcommander = var_alloc
-          exactly_one(item, io, subcommander)
+          at_most_one(item, io, commander: subcommander, at_least_one: at_least_one)
           subcommander
         else
           item
@@ -20,14 +24,12 @@ module CommanderVariable
         clause_vars << negate(commander)
       end
 
-      naive_exactly_one(clause_vars, io)
+      naive_at_most_one(clause_vars, io, at_least_one: at_least_one)
     end
 
-    def wrapper(variables, io)
+    def wrapper(variables, io, at_least_one:)
       groups = group_vars(variables, 3)
-      commander = 0
-
-      exactly_one(groups, io, commander)
+      at_most_one(groups, io, commander: 0, at_least_one: at_least_one)
     end
 
     def group_vars(variables, max_size)
@@ -39,8 +41,8 @@ module CommanderVariable
       end
     end
 
-    def naive_exactly_one(clause_vars, io)
-      io.puts clause_vars.join(" ")
+    def naive_at_most_one(clause_vars, io, at_least_one:)
+      io.puts clause_vars.join(" ") if at_least_one
 
       clause_vars.combination(2).each do |(a, b)|
         io.puts "#{negate(a)} #{negate(b)}"
