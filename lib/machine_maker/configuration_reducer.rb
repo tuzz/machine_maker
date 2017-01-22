@@ -66,7 +66,7 @@ class ConfigurationReducer
   end
 
   def denormalise_right_symbol
-    at_right_edge = "Head_#{computation}_#{step}_4"
+    at_right_edge = "Head_#{computation}_#{step}_#{cells - 1}"
     CommanderVariable.exactly_one([*right_symbol_vars, at_right_edge], io)
 
     # Head_p ^ Tape_p+1 -> RightSymbol_s
