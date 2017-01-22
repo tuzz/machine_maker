@@ -7,7 +7,7 @@ module CommanderVariable
       at_most_one(list, io, at_least_one: true)
     end
 
-    def at_most_one(list, io, commander: nil, at_least_one: at_least_one)
+    def at_most_one(list, io, commander: nil, at_least_one: false)
       return wrapper(list, io, at_least_one: at_least_one) unless commander
 
       clause_vars = list.map do |item|
