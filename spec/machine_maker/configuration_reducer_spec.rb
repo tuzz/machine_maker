@@ -181,25 +181,5 @@ RSpec.describe ConfigurationReducer do
         expect(right_symbols).to eq(tape_symbols)
       end
     end
-
-    context "when the head is at the left edge of the tape" do
-      before do
-        io.puts "Head_1_2_0"
-      end
-
-      it "ensures there is no left symbol" do
-        expect(left_symbols).to eq [false, false, false]
-      end
-    end
-
-    context "when the head is at the right edge of the tape" do
-      before do
-        io.puts "Head_1_2_4"
-      end
-
-      it "ensures there is no right symbol" do
-        expect(right_symbols).to eq [false, false, false]
-      end
-    end
   end
 end

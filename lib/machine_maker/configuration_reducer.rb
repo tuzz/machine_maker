@@ -51,8 +51,7 @@ class ConfigurationReducer
   end
 
   def denormalise_left_symbol
-    at_left_edge = "Head_#{computation}_#{step}_0"
-    CommanderVariable.exactly_one([*left_symbol_vars, at_left_edge], io)
+    CommanderVariable.exactly_one(left_symbol_vars, io)
 
     # Head_p ^ Tape_p-1 -> LeftSymbol_s
     left_symbol_vars.each.with_index do |symbol, i|
@@ -66,8 +65,7 @@ class ConfigurationReducer
   end
 
   def denormalise_right_symbol
-    at_right_edge = "Head_#{computation}_#{step}_#{cells - 1}"
-    CommanderVariable.exactly_one([*right_symbol_vars, at_right_edge], io)
+    CommanderVariable.exactly_one(right_symbol_vars, io)
 
     # Head_p ^ Tape_p+1 -> RightSymbol_s
     right_symbol_vars.each.with_index do |symbol, i|
