@@ -109,11 +109,11 @@ RSpec.describe ConnectionReducer do
       subject.next_right_equals_write_if_moved_left
 
       expect(dimacs).to include(
-        "-Step_0_1_Direction -RightSymbol_0_1_0 Step_0_1_Write_0",
-        "-Step_0_1_Direction RightSymbol_0_1_0 -Step_0_1_Write_0",
+        "-Step_0_1_Direction -RightSymbol_0_2_0 Step_0_1_Write_0",
+        "-Step_0_1_Direction RightSymbol_0_2_0 -Step_0_1_Write_0",
 
-        "-Step_0_1_Direction -RightSymbol_0_1_1 Step_0_1_Write_1",
-        "-Step_0_1_Direction RightSymbol_0_1_1 -Step_0_1_Write_1",
+        "-Step_0_1_Direction -RightSymbol_0_2_1 Step_0_1_Write_1",
+        "-Step_0_1_Direction RightSymbol_0_2_1 -Step_0_1_Write_1",
       )
     end
   end
@@ -123,11 +123,15 @@ RSpec.describe ConnectionReducer do
       subject.next_left_equals_write_if_moved_right
 
       expect(dimacs).to include(
-        "Step_0_1_Direction -LeftSymbol_0_1_0 Step_0_1_Write_0",
-        "Step_0_1_Direction LeftSymbol_0_1_0 -Step_0_1_Write_0",
+        "Step_0_1_Direction -LeftSymbol_0_2_0 Step_0_1_Write_0",
+        "Step_0_1_Direction LeftSymbol_0_2_0 -Step_0_1_Write_0",
 
-        "Step_0_1_Direction -LeftSymbol_0_1_1 Step_0_1_Write_1",
-        "Step_0_1_Direction LeftSymbol_0_1_1 -Step_0_1_Write_1",
+        "Step_0_1_Direction -LeftSymbol_0_2_1 Step_0_1_Write_1",
+        "Step_0_1_Direction LeftSymbol_0_2_1 -Step_0_1_Write_1",
+      )
+    end
+  end
+
       )
     end
   end

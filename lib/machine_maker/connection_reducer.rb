@@ -113,13 +113,13 @@ class ConnectionReducer
 
   def next_left_symbol_vars
     symbols.times.map do |symbol|
-      "LeftSymbol_#{computation}_#{step}_#{symbol}"
+      "LeftSymbol_#{computation}_#{step + 1}_#{symbol}"
     end
   end
 
   def next_right_symbol_vars
     symbols.times.map do |symbol|
-      "RightSymbol_#{computation}_#{step}_#{symbol}"
+      "RightSymbol_#{computation}_#{step + 1}_#{symbol}"
     end
   end
 
