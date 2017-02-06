@@ -26,6 +26,8 @@ class ConnectionReducer
 
     next_right_equals_write_if_moved_left
     next_left_equals_write_if_moved_right
+
+    rest_of_the_tape_remains_the_same
   end
 
   def previous_state_equals_from
@@ -88,6 +90,19 @@ class ConnectionReducer
     next_left_symbol_vars.zip(step_write_symbol_vars).each do |symbol, write|
       io.puts "#{step_moves_left} -#{symbol} #{write}"
       io.puts "#{step_moves_left} #{symbol} -#{write}"
+    end
+  end
+
+  def rest_of_the_tape_remains_the_same
+    previous_head_positions.each.with_index do |position, cell|
+      previous_cells = previous_tape_cell_vars(cell)
+      next_cells = next_tape_cell_vars(cell)
+
+      # -Head_p -> (prev == next)
+      previous_cells.zip(next_cells).each do |p, n|
+        io.puts "#{position} -#{p} #{n}"
+        io.puts "#{position} #{p} -#{n}"
+      end
     end
   end
 
@@ -161,5 +176,17 @@ class ConnectionReducer
 
   def step_moves_left
     "Step_#{computation}_#{step}_Direction"
+  end
+
+  def previous_tape_cell_vars(cell)
+    symbols.times.map do |symbol|
+      "Tape_#{computation}_#{step}_#{cell}_#{symbol}"
+    end
+  end
+
+  def next_tape_cell_vars(cell)
+    symbols.times.map do |symbol|
+      "Tape_#{computation}_#{step + 1}_#{cell}_#{symbol}"
+    end
   end
 end

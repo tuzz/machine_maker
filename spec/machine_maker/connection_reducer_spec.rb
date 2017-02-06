@@ -132,6 +132,19 @@ RSpec.describe ConnectionReducer do
     end
   end
 
+  describe "#rest_of_the_tape_remains_the_same" do
+    it "ensures the tape cells are equal if the head was not at that position" do
+      subject.rest_of_the_tape_remains_the_same
+
+      expect(dimacs).to include(
+        "Head_0_1_0 -Tape_0_1_0_0 Tape_0_2_0_0",
+        "Head_0_1_0 Tape_0_1_0_0 -Tape_0_2_0_0",
+
+        "Head_0_1_0 -Tape_0_1_0_1 Tape_0_2_0_1",
+        "Head_0_1_0 Tape_0_1_0_1 -Tape_0_2_0_1",
+
+        "Head_0_1_1 -Tape_0_1_1_0 Tape_0_2_1_0",
+        "Head_0_1_1 Tape_0_1_1_0 -Tape_0_2_1_0",
       )
     end
   end
@@ -164,7 +177,7 @@ RSpec.describe ConnectionReducer do
         step: subject.step + 1,
         symbols: subject.symbols,
         states: subject.states,
-        cells: 5,
+        cells: subject.cells,
         io: subject.io,
       ).reduce
     end
