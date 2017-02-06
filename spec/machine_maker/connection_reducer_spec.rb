@@ -2,11 +2,12 @@ RSpec.describe ConnectionReducer do
   let(:io) { StringIO.new }
   let(:dimacs) { io.string.split("\n") }
   let(:transitions) { 2 }
+  let(:step) { 1 }
 
   subject do
     described_class.new(
       computation: 0,
-      step: 1,
+      step: step,
       symbols: 2,
       states: 3,
       cells: 4,
@@ -39,6 +40,26 @@ RSpec.describe ConnectionReducer do
         "-State_0_2_2 Step_0_1_To_2",
         "State_0_2_2 -Step_0_1_To_2",
       )
+    end
+  end
+
+  describe "#starts_in_state_0" do
+    context "when it is the first step" do
+      let(:step) { 0 }
+
+      it "enforces the state is zero" do
+        subject.starts_in_state_0
+        expect(dimacs).to eq ["State_0_0_0"]
+      end
+    end
+
+    context "when it is not the first step" do
+      let(:step) { 2 }
+
+      it "does not enforce the state is zero" do
+        subject.starts_in_state_0
+        expect(dimacs).to be_empty
+      end
     end
   end
 

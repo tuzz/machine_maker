@@ -18,6 +18,7 @@ class ConnectionReducer
   def reduce
     previous_state_equals_from
     next_state_equals_to
+    starts_in_state_0
 
     previous_read_equals_read
 
@@ -42,6 +43,10 @@ class ConnectionReducer
       io.puts "-#{state} #{from}"
       io.puts "#{state} -#{from}"
     end
+  end
+
+  def starts_in_state_0
+    io.puts "State_#{computation}_0_0" if step.zero?
   end
 
   def previous_read_equals_read

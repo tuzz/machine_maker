@@ -34,12 +34,12 @@ RSpec.describe ComputationReducer do
   end
 
   it "can increment a binary number" do
-    # set the initial tape to _111_ (we use 2 for _)
-    io.puts "Tape_1_0_0_2"
-    io.puts "Tape_1_0_1_1"
-    io.puts "Tape_1_0_2_1"
-    io.puts "Tape_1_0_3_1"
-    io.puts "Tape_1_0_4_2"
+    # set the initial tape to 1000_ (we use 2 for _)
+    io.puts "Tape_1_8_0_1"
+    io.puts "Tape_1_8_1_0"
+    io.puts "Tape_1_8_2_0"
+    io.puts "Tape_1_8_3_0"
+    io.puts "Tape_1_8_4_2"
 
     # position the head at the least-significant bit
     io.puts "Head_1_0_3"
