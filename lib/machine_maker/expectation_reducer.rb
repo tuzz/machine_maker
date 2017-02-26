@@ -52,6 +52,9 @@ class ExpectationReducer
 
   def map_symbols(tape)
     array = tape.is_a?(Array) ? tape : tape.split("")
-    array.map { |s| alphabet.index(s) }
+
+    array.map do |s|
+      alphabet.index(s) or raise ArgumentError, "'#{s}' is not in the alphabet"
+    end
   end
 end

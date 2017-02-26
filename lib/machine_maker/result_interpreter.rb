@@ -45,6 +45,6 @@ class ResultInterpreter
   end
 
   def lookup_symbols(array)
-    array.map { |i| alphabet[i] }
+    array.map { |i| alphabet[i] || "x#{i}" }
   end
 end
