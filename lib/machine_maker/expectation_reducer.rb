@@ -5,14 +5,16 @@ class ExpectationReducer
     new(**params).reduce
   end
 
-  attr_accessor :alphabet, :input, :output, :computation, :steps, :io
+  attr_accessor :alphabet, :input, :output, :computation, :steps, :start, :stop, :io
 
-  def initialize(alphabet: nil, input:, output:, computation:, steps:, io:)
+  def initialize(alphabet: nil, input:, output:, computation:, steps:, start: nil, stop: nil, io:)
     self.alphabet = alphabet || DEFAULT_ALPHABET
     self.input = map_symbols(input)
     self.output = map_symbols(output)
     self.computation = computation
     self.steps = steps
+    self.start = start
+    self.stop = stop
     self.io = io
 
     if input.size != output.size
@@ -23,6 +25,9 @@ class ExpectationReducer
   def reduce
     initial_tape_matches_input
     final_tape_matches_output
+
+    head_start_position_is_set
+    head_stop_position_is_set
   end
 
   def initial_tape_matches_input
@@ -35,6 +40,14 @@ class ExpectationReducer
     output.each.with_index do |symbol, cell|
       io.puts "Tape_#{computation}_#{steps}_#{cell}_#{symbol}"
     end
+  end
+
+  def head_start_position_is_set
+    io.puts "Head_#{computation}_0_#{start}" if start
+  end
+
+  def head_stop_position_is_set
+    io.puts "Head_#{computation}_#{steps}_#{stop}" if stop
   end
 
   def map_symbols(tape)
